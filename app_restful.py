@@ -1,10 +1,10 @@
-from flask import Flask, request
-from flask_restful import Resource, Api, reqparse
-from flask_jwt import JWT, jwt_required
+from flask import Flask
+from flask_restful import Api
+from flask_jwt import JWT
 
 from security import authenticate, identity
-from user import UserRegister
-from item import ItemList, Item
+from resources.user import UserRegister
+from resources.item import ItemList, Item
 app = Flask(__name__)
 app.secret_key = 'joo'
 api = Api(app)

@@ -15,16 +15,7 @@ class Item(Resource):
             return {'item':item}
         return {'message':'Item not found.'}, 404
 
-    @classmethod
-    def find_item_by_name(cls, name):
-        connection = sqlite3.connect('data.db')
-        cursor = connection.cursor()
-        query = 'select * from items as i where i.name = ?'
-        result = cursor.execute(query, (name,))
-        row = result.fetchone()
-        if row:
-            return {'id':row[0], 'name': row[1], 'price': row[2]}
-        return None
+
     def post(self, name):
         if self.find_item_by_name(name):
             return {'message': f'Item already exists.'}, 400
@@ -39,19 +30,7 @@ class Item(Resource):
         except:
             return {'message':'Error occured when inserting a record'}, 500
 
-    @classmethod
-    def insert_item_into_db(cls, item):
-        connection = sqlite3.connect('data.db')
-        cursor = connection.cursor()
-        insert_query = 'insert into items values (null, ?, ?)'
-        cursor.execute(insert_query, (item['name'], item['price']))
-        item_id = cursor.lastrowid
-        last_query = f'select * from items as i where i.id = ?'
-        result = cursor.execute(last_query, (item_id,))
-        new_item_in_db = result.fetchone()
-        connection.commit()
-        connection.close()
-        return new_item_in_db
+
     def delete(self, name):
         connection = sqlite3.connect('data.db')
         cursor = connection.cursor()
@@ -76,14 +55,7 @@ class Item(Resource):
                 self.insert_item_into_db(updated_item)
         except:
             return {'message': 'An error occurred when updating the item'}, 500
-    @classmethod
-    def update_item_to_db(cls, item):
-        connection = sqlite3.connect('data.db')
-        cursor = connection.cursor()
-        update_query = 'update items set price =? where name=?'
-        cursor.execute(update_query, (item['price'], item['name'],))
-        connection.commit()
-        connection.close()
+
 class ItemList(Resource):
     def get(self):
         connection = sqlite3.connect('data.db')
