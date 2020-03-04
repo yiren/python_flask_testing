@@ -1,6 +1,11 @@
 import sqlite3
+from orm import orm
+class UserModel(orm.Model):
+    __tablename__ ='users'
+    id = orm.Column(orm.Integer, primary_key=True)
+    username = orm.Column(orm.String(80))
+    password = orm.Column(orm.String(80))
 
-class UserModel:
     def __init__(self, _id, name, password):
         self.id = _id
         self.name = name

@@ -1,8 +1,7 @@
 import sqlite3
 from flask_restful import Resource, reqparse
 from flask_jwt import jwt_required
-
-items =[]
+from models.item import ItemModel
 
 class Item(Resource):
     parser = reqparse.RequestParser()
@@ -10,26 +9,22 @@ class Item(Resource):
     @jwt_required()
     def get(self, name):
 
-        item = self.find_item_by_name(name)
+        item = ItemModel.find_item_by_name(name)
         if item:
             return {'item':item}
         return {'message':'Item not found.'}, 404
 
 
     def post(self, name):
-        if self.find_item_by_name(name):
+        if ItemModel.find_item_by_name(name):
             return {'message': f'Item already exists.'}, 400
         data = Item.parser.parse_args()
-        item = {
-            'name': name,
-            'price': data['price']
-        }
+        item = ItemModel(name, data['price'])
         try:
-            data = self.insert_item_into_db(item)
-            return data
+            db_item = item.insert_item_into_db()
+            return db_item if db_item else None, 201
         except:
             return {'message':'Error occured when inserting a record'}, 500
-
 
     def delete(self, name):
         connection = sqlite3.connect('data.db')
@@ -41,18 +36,16 @@ class Item(Resource):
         return {'message': 'The item was deleted.'}
 
     def put(self, name):
-        item = self.find_item_by_name(name)
+        item = ItemModel.find_item_by_name(name)
         data = self.parser.parse_args()
-        updated_item = {
-            'name': name,
-            'price': data['price']
-        }
+        updated_item = ItemModel(name, data['price'])
         try:
             if item:
-                self.update_item_to_db(updated_item)
+                updated_item.update_item_to_db()
                 return self.find_item_by_name(name)
             else:
-                self.insert_item_into_db(updated_item)
+                updated_item.insert_item_into_db()
+                return {'message': f'Item {name} was updated successfully.'}
         except:
             return {'message': 'An error occurred when updating the item'}, 500
 
