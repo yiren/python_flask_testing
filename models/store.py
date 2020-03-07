@@ -1,4 +1,6 @@
 from orm import orm
+
+
 class StoreModel(orm.Model):
     __tablename__ = 'stores'
     id = orm.Column(orm.Integer, primary_key=True)
@@ -11,7 +13,7 @@ class StoreModel(orm.Model):
     def json(self):
         return {'name': self.name, 'items': [item.json() for item in self.items.all()]}
 
-    @classmethod # notice that this cannot be changed to class function/method but should be @classmethod
+    @classmethod  # notice that this cannot be changed to class function/method but should be @classmethod
     def find_store_by_name(cls, name):
         return cls.query.filter_by(name=name).first()
 
