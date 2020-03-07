@@ -6,6 +6,7 @@ from models.item import ItemModel
 class Item(Resource):
     parser = reqparse.RequestParser()
     parser.add_argument('price', type=float, required=True, help="Price cannot be blank.")
+    parser.add_argument('store_id', type=int, required=True, help="Store is required.")
 
     @jwt_required()
     def get(self, name):
@@ -18,7 +19,7 @@ class Item(Resource):
         if ItemModel.find_item_by_name(name):
             return {'message': f'Item already exists.'}, 400
         data = Item.parser.parse_args()
-        item = ItemModel(name, data['price'])
+        item = ItemModel(name, **data)
 
         # try:
         item.save_item_to_db()

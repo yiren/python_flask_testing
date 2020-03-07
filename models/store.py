@@ -1,36 +1,30 @@
 from orm import orm
-class ItemModel(orm.Model):
-    __tablename__ = 'items'
+class StoreModel(orm.Model):
+    __tablename__ = 'stores'
     id = orm.Column(orm.Integer, primary_key=True)
     name = orm.Column(orm.String(80))
-    price = orm.Column(orm.Float(precision=2))
+    items = orm.relationship('ItemModel', lazy="dynamic")
 
-
-    store = orm.relationship('StoreModel')
-    store_id = orm.Column(orm.Integer, orm.ForeignKey('stores.id'))
-
-    def __init__(self, name, price, store_id):
+    def __init__(self, name):
         self.name = name
-        self.price = price
-        self.store_id = store_id
 
     def json(self):
-        return {'name': self.name, 'price': self.price}
+        return {'name': self.name, 'items': [item.json() for item in self.items.all()]}
 
     @classmethod # notice that this cannot be changed to class function/method but should be @classmethod
-    def find_item_by_name(cls, name):
+    def find_store_by_name(cls, name):
         return cls.query.filter_by(name=name).first()
 
-    def save_item_to_db(self):
+    def save_store_to_db(self):
         orm.session.add(self)
         orm.session.commit()
 
-    def delete_item_in_db(self):
+    def delete_store_in_db(self):
         orm.session.delete(self)
         orm.session.commit()
 
     @classmethod
-    def get_items_from_db(cls):
+    def get_stores_from_db(cls):
         return cls.query.all()
     # def update_item_to_db(self):
     #     connection = sqlite3.connect('data.db')

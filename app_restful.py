@@ -5,6 +5,7 @@ from orm import orm
 
 from security import authenticate, identity
 from resources.user import UserRegister
+from resources.store import StoreList, Store
 from resources.item import ItemList, Item
 
 
@@ -25,6 +26,9 @@ jwt = JWT(app, authenticate, identity)
 
 api.add_resource(Item, '/item/<string:name>')
 api.add_resource(ItemList, '/items')
+api.add_resource(Store, '/store/<string:name>')
+api.add_resource(StoreList, '/stores')
+
 api.add_resource(UserRegister, '/register')
 
 if __name__ == '__main__': # Only called when running 'app.py,' running not from imports
