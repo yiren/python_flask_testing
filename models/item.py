@@ -15,7 +15,12 @@ class ItemModel(orm.Model):
         self.store_id = store_id
 
     def json(self):
-        return {'name': self.name, 'price': self.price}
+        return {
+            'id': self.id,
+            'name': self.name,
+            'price': self.price,
+            'store_id': self.store_id
+        }
 
     @classmethod # notice that this cannot be changed to class function/method but should be @classmethod
     def find_item_by_name(cls, name):

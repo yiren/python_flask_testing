@@ -4,7 +4,7 @@ from flask_jwt import JWT
 from orm import orm
 
 from security import authenticate, identity
-from resources.user import UserRegister
+from resources.user import UserRegister, User
 from resources.store import StoreList, Store
 from resources.item import ItemList, Item
 
@@ -28,6 +28,7 @@ api.add_resource(Item, '/item/<string:name>')
 api.add_resource(ItemList, '/items')
 api.add_resource(Store, '/store/<string:name>')
 api.add_resource(StoreList, '/stores')
+api.add_resource(User, '/user/<int:user_id>')
 
 api.add_resource(UserRegister, '/register')
 
