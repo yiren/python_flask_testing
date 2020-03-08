@@ -11,7 +11,9 @@ from resources.user import UserRegister, User, UserLogin, RefreshToken
 
 app = Flask(__name__)
 app.secret_key = 'joo'
-app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///data.db'
+# app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///data.db'
+app.config['SQLALCHEMY_DATABASE_URI'] = os.environ.get('DATABASE_URL', 'sqlite:///data.db')
+i
 # sqlalchemy package has its own tracker, disable the one implemented in the flask_sqlalchemy package
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 
