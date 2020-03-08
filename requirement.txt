@@ -2,3 +2,4 @@ flask-restful
 flask-jwt
 flask-sqlalchemy
 flask-jwt-extended
+uwsgi
