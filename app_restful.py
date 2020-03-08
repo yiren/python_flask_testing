@@ -17,10 +17,10 @@ app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 
 api = Api(app)
 
-
-@app.before_first_request
-def create_tables():
-    orm.create_all()
+#
+# @app.before_first_request
+# def create_tables():
+#     orm.create_all()
 
 
 jwt = JWTManager(app)
@@ -45,6 +45,7 @@ api.add_resource(UserRegister, '/register')
 api.add_resource(UserLogin, '/login')
 api.add_resource(RefreshToken, '/refresh')
 
+# uWSGI would not run the code below
 if __name__ == '__main__':  # Only called when running 'app.py,' running not from imports
 
     orm.init_app(app)
