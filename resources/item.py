@@ -10,14 +10,14 @@ class Item(Resource):
     parser.add_argument('store_id', type=int, required=True, help="Store is required.")
 
     @jwt_required
-    def get(self, name):
+    def get(self, name:str): # if no caller exists in the app, it may not need to assign return type
         item = ItemModel.find_item_by_name(name)
         if item:
             return {'item': item.json()}
         return {'message': 'Item not found.'}, 404
 
     @jwt_refresh_token_required
-    def post(self, name):
+    def post(self, name:str):
         if ItemModel.find_item_by_name(name):
             return {'message': f'Item already exists.'}, 400
         data = Item.parser.parse_args()
@@ -30,7 +30,7 @@ class Item(Resource):
         return item.json(), 201
 
     @jwt_required
-    def delete(self, name):
+    def delete(self, name: str):
         claims = get_jwt_claims()
         if not claims['is_admin']:
             return {'message': 'Admin is required'}, 401
@@ -42,7 +42,7 @@ class Item(Resource):
         else:
             return {'message': f'{name} not exists'}
 
-    def put(self, name):
+    def put(self, name:str):
         item = ItemModel.find_item_by_name(name)
         data = self.parser.parse_args()
         if item:

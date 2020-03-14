@@ -1,3 +1,5 @@
+from typing import Dict, List
+
 from orm import orm
 
 
@@ -10,12 +12,12 @@ class ItemModel(orm.Model):
     store = orm.relationship('StoreModel')
     store_id = orm.Column(orm.Integer, orm.ForeignKey('stores.id'))
 
-    def __init__(self, name, price, store_id):
+    def __init__(self, name: str, price: float, store_id: int):
         self.name = name
         self.price = price
         self.store_id = store_id
 
-    def json(self):
+    def json(self) -> Dict:
         return {
             'id': self.id,
             'name': self.name,
@@ -27,16 +29,16 @@ class ItemModel(orm.Model):
     def find_item_by_name(cls, name):
         return cls.query.filter_by(name=name).first()
 
-    def save_item_to_db(self):
+    def save_item_to_db(self) -> None:
         orm.session.add(self)
         orm.session.commit()
 
-    def delete_item_in_db(self):
+    def delete_item_in_db(self) -> None:
         orm.session.delete(self)
         orm.session.commit()
 
     @classmethod
-    def get_items_from_db(cls):
+    def get_items_from_db(cls) -> List:
         return cls.query.all()
     # def update_item_to_db(self):
     #     connection = sqlite3.connect('data.db')

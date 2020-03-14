@@ -1,3 +1,4 @@
+from typing import Dict, List
 from orm import orm
 
 
@@ -7,11 +8,11 @@ class UserModel(orm.Model):
     username = orm.Column(orm.String(80))
     password = orm.Column(orm.String(80))
 
-    def __init__(self, username, password):
+    def __init__(self, username:str, password:str):
         self.username = username
         self.password = password
 
-    def json(self):
+    def json(self) -> Dict:
         return {
             'id': self.id,
             'username': self.username
@@ -25,10 +26,10 @@ class UserModel(orm.Model):
     def find_user_by_id(cls, _id):
         return cls.query.filter_by(id=_id).first()
 
-    def save_user_to_db(self):
+    def save_user_to_db(self) -> None:
         orm.session.add(self)
         orm.session.commit()
 
-    def delete_user_in_db(self):
+    def delete_user_in_db(self) -> None:
         orm.session.delete(self)
         orm.session.commit()
