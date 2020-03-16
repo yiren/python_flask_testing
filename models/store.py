@@ -1,5 +1,9 @@
-from typing import Dict, List
+from typing import Dict, List, Union
+
+from models.item import ItemJson
 from orm import orm
+
+StoreJson = Dict[str, Union[int, str, List[ItemJson]]]
 
 
 class StoreModel(orm.Model):
@@ -11,11 +15,11 @@ class StoreModel(orm.Model):
     def __init__(self, name: str):
         self.name = name
 
-    def json(self) -> Dict:
+    def json(self) -> StoreJson:
         return {'name': self.name, 'items': [item.json() for item in self.items.all()]}
 
     @classmethod  # notice that this cannot be changed to class function/method but should be @classmethod
-    def find_store_by_name(cls, name:str):
+    def find_store_by_name(cls, name: str) -> "StoreModel":
         return cls.query.filter_by(name=name).first()
 
     def save_store_to_db(self) -> None:
@@ -27,7 +31,7 @@ class StoreModel(orm.Model):
         orm.session.commit()
 
     @classmethod
-    def get_stores_from_db(cls) -> List:
+    def get_stores_from_db(cls) -> List["StoreModel"]:
         return cls.query.all()
     # def update_item_to_db(self):
     #     connection = sqlite3.connect('data.db')

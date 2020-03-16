@@ -1,7 +1,8 @@
-from typing import Dict, List
+from typing import Dict, List, Union
 
 from orm import orm
 
+ItemJson = Dict[str, Union[int, str, float]]
 
 class ItemModel(orm.Model):
     __tablename__ = 'items'
@@ -17,7 +18,7 @@ class ItemModel(orm.Model):
         self.price = price
         self.store_id = store_id
 
-    def json(self) -> Dict:
+    def json(self) -> ItemJson:
         return {
             'id': self.id,
             'name': self.name,
@@ -26,7 +27,7 @@ class ItemModel(orm.Model):
         }
 
     @classmethod  # notice that this cannot be changed to class function/method but should be @classmethod
-    def find_item_by_name(cls, name):
+    def find_item_by_name(cls, name: str) -> "ItemModel":
         return cls.query.filter_by(name=name).first()
 
     def save_item_to_db(self) -> None:
@@ -38,7 +39,7 @@ class ItemModel(orm.Model):
         orm.session.commit()
 
     @classmethod
-    def get_items_from_db(cls) -> List:
+    def get_items_from_db(cls) -> List["ItemModel"]:
         return cls.query.all()
     # def update_item_to_db(self):
     #     connection = sqlite3.connect('data.db')

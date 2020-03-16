@@ -1,5 +1,8 @@
-from typing import Dict, List
+from typing import Dict, Union
+
 from orm import orm
+
+UserJson = Dict[str, Union[int, str]]
 
 
 class UserModel(orm.Model):
