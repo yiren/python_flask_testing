@@ -5,3 +5,5 @@ flask-sqlalchemy
 flask-jwt-extended
 uwsgi
 psycopg2
+python-dotenv
+flask-migrate

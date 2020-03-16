@@ -1,5 +1,6 @@
 import os
 
+from dotenv import load_dotenv
 from flask import Flask
 from flask_jwt_extended import JWTManager
 from flask_restful import Api
@@ -12,6 +13,7 @@ from resources.store import StoreList, Store
 from resources.user import UserRegister, User, UserLogin, RefreshToken
 
 app = Flask(__name__)
+load_dotenv('.env')
 app.secret_key = 'joo'
 # app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///data.db'
 app.config['SQLALCHEMY_DATABASE_URI'] = os.environ.get('DATABASE_URL', 'sqlite:///data.db')
