@@ -10,10 +10,10 @@ flask = "*"
 flask-restful = "*"
 flask-jwt-extended = "*"
 marshmallow = "*"
-uwsgi = "*"
 flask-marshmallow = "*"
 flask-sqlalchemy = "*"
 marshmallow-sqlalchemy = "*"
+flask-jwt = "*"
 
 [requires]
 python_version = "3.8"

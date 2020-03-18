@@ -1,10 +1,13 @@
-from flask_jwt_extended import create_access_token, create_refresh_token, jwt_refresh_token_required, get_current_user, \
-    get_jwt_identity
+from flask import request
+from flask_jwt_extended import create_access_token, create_refresh_token, jwt_refresh_token_required, get_jwt_identity
 from flask_restful import Resource, reqparse
+from marshmallow import ValidationError
 from werkzeug.security import safe_str_cmp
 
 from models.user import UserModel
+from schema.user import UserSchema
 
+user_schema = UserSchema()
 # '_' implies private variable, and reuse within this file
 _user_parser = reqparse.RequestParser()
 _user_parser.add_argument('username', type=str, required=True, help='Username is required')
@@ -12,9 +15,14 @@ _user_parser.add_argument('password', type=str, required=True, help='Password is
 
 
 class UserRegister(Resource):
-
+    @classmethod
     def post(self):
-        data = _user_parser.parse_args()
+        try:
+            json = request.get_json()
+            data = user_schema.load(json)
+        except ValidationError as err:
+            return err.messages, 400
+
         if UserModel.find_user_by_username(data['username']):
             return {'message': f'User {data["username"]} already exists.'}
 
@@ -25,13 +33,14 @@ class UserRegister(Resource):
 
 
 class User(Resource):
-
+    @classmethod
     def get(self, user_id):
         user = UserModel.find_user_by_id(user_id)
         if not user:
             return {'message': 'User not found'}, 404
-        return user.json()
+        return user_schema.dump(user)
 
+    @classmethod
     def delete(self, user_id):
         user = UserModel.find_user_by_id(user_id)
         if not user:
@@ -42,9 +51,13 @@ class User(Resource):
 
 # manually implement authenticate() provided in flask-jwt
 class UserLogin(Resource):
-
+    @classmethod
     def post(self):
-        data = _user_parser.parse_args()
+        try:
+            json = request.get_json()
+            data = user_schema.load(json)
+        except ValidationError as err:
+            return err.messages, 400
 
         user = UserModel.find_user_by_username(data['username'])
         if user and safe_str_cmp(user.password, data['password']):
