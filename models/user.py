@@ -4,12 +4,13 @@ from orm import orm
 class UserModel(orm.Model):
     __tablename__ = 'users'
     id = orm.Column(orm.Integer, primary_key=True)
-    username = orm.Column(orm.String(80))
-    password = orm.Column(orm.String(80))
+    username = orm.Column(orm.String(80), nullable=False)
+    password = orm.Column(orm.String(80), nullable=False)
 
-    def __init__(self, username, password):
-        self.username = username
-        self.password = password
+    # username and password are set to nullable = false
+    # def __init__(self, username, password):
+    #     self.username = username
+    #     self.password = password
 
     def json(self):
         return {

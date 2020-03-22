@@ -4,6 +4,7 @@ from flask import Flask
 from flask_jwt_extended import JWTManager
 from flask_restful import Api
 
+from ma import ma
 # from flask_jwt import JWT
 from orm import orm
 from resources.item import ItemList, Item
@@ -50,6 +51,6 @@ api.add_resource(RefreshToken, '/refresh')
 
 # uWSGI would not run the code below
 if __name__ == '__main__':  # Only called when running 'app.py,' running not from imports
-
+    ma.init_app(app)
     orm.init_app(app)
     app.run(debug=True, port=5001)
