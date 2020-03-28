@@ -1,20 +1,19 @@
+from typing import List
+
 from orm import orm
 
 
 class StoreModel(orm.Model):
     __tablename__ = 'stores'
     id = orm.Column(orm.Integer, primary_key=True)
-    name = orm.Column(orm.String(80))
+    name = orm.Column(orm.String(80), nullable=False)
     items = orm.relationship('ItemModel', lazy="dynamic")
 
-    def __init__(self, name):
-        self.name = name
-
-    def json(self):
-        return {'name': self.name, 'items': [item.json() for item in self.items.all()]}
+    # def json(self):
+    #     return {'name': self.name, 'items': [item.json() for item in self.items.all()]}
 
     @classmethod  # notice that this cannot be changed to class function/method but should be @classmethod
-    def find_store_by_name(cls, name):
+    def find_store_by_name(cls, name) -> "StoreModel":
         return cls.query.filter_by(name=name).first()
 
     def save_store_to_db(self):
@@ -26,7 +25,7 @@ class StoreModel(orm.Model):
         orm.session.commit()
 
     @classmethod
-    def get_stores_from_db(cls):
+    def get_stores_from_db(cls) -> List["StoreModel"]:
         return cls.query.all()
     # def update_item_to_db(self):
     #     connection = sqlite3.connect('data.db')

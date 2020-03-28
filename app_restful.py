@@ -1,8 +1,9 @@
 import os
 
-from flask import Flask
+from flask import Flask, jsonify
 from flask_jwt_extended import JWTManager
 from flask_restful import Api
+from marshmallow import ValidationError
 
 from ma import ma
 # from flask_jwt import JWT
@@ -18,6 +19,12 @@ app.secret_key = 'joo'
 app.config['SQLALCHEMY_DATABASE_URI'] = os.environ.get('DATABASE_URL', 'sqlite:///data.db')
 # sqlalchemy package has its own tracker, disable the one implemented in the flask_sqlalchemy package
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
+app.config['PROPAGATE_EXCEPTIONS'] = True
+app.config['JWT_BLACKLIST_ENABLED'] = True
+app.config['JWT_BLACKLIST_TOKEN_CHECKS'] = [
+    'access',
+    'refresh'
+]
 
 api = Api(app)
 
@@ -28,6 +35,11 @@ api = Api(app)
 
 
 jwt = JWTManager(app)
+
+
+@app.errorhandler(ValidationError)
+def handle_marshmallow_error(err):
+    return jsonify(err.messages), 400
 
 
 # jwt = JWT(app, authenticate, identity)

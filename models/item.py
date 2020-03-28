@@ -4,24 +4,24 @@ from orm import orm
 class ItemModel(orm.Model):
     __tablename__ = 'items'
     id = orm.Column(orm.Integer, primary_key=True)
-    name = orm.Column(orm.String(80))
-    price = orm.Column(orm.Float(precision=2))
+    name = orm.Column(orm.String(80), nullable=False)
+    price = orm.Column(orm.Float(precision=2), nullable=False)
 
     store = orm.relationship('StoreModel')
-    store_id = orm.Column(orm.Integer, orm.ForeignKey('stores.id'))
+    store_id = orm.Column(orm.Integer, orm.ForeignKey('stores.id'), nullable=False)
 
-    def __init__(self, name, price, store_id):
-        self.name = name
-        self.price = price
-        self.store_id = store_id
+    # def __init__(self, name, price, store_id):
+    #     self.name = name
+    #     self.price = price
+    #     self.store_id = store_id
 
-    def json(self):
-        return {
-            'id': self.id,
-            'name': self.name,
-            'price': self.price,
-            'store_id': self.store_id
-        }
+    # def json(self):
+    #     return {
+    #         'id': self.id,
+    #         'name': self.name,
+    #         'price': self.price,
+    #         'store_id': self.store_id
+    #     }
 
     @classmethod  # notice that this cannot be changed to class function/method but should be @classmethod
     def find_item_by_name(cls, name):
