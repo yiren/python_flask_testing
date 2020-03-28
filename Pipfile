@@ -13,7 +13,10 @@ marshmallow = "*"
 flask-marshmallow = "*"
 flask-sqlalchemy = "*"
 marshmallow-sqlalchemy = "*"
-flask-jwt = "*"
+psycopg2 = "*"
+flask-migrate = "*"
+alembic = "*"
+python-dotenv = "*"
 
 [requires]
 python_version = "3.8"
