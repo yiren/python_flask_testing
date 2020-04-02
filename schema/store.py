@@ -3,7 +3,11 @@ from models.store import StoreModel
 from schema.item import ItemSchema
 
 
-class StoreSchema(ma.Schema):
+# from models.item import ItemModel
+
+
+class StoreSchema(ma.ModelSchema):
+    # imply
     items = ma.Nested(ItemSchema, many=True)
 
     class Meta:
